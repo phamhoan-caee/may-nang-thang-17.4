@@ -1,621 +1,136 @@
-const questionBank = [
-
-{
-q:"Xe nâng khi xuống dốc có tải phải đi thế nào?",
-options:{A:"Đi tiến",B:"Đi lùi",C:"Đi ngang",D:"Tắt máy"},
-correct:"B"
-},
-
-{
-q:"Khi tầm nhìn bị che bởi hàng?",
-options:{A:"Rướn người nhìn",B:"Lùi xe",C:"Tăng tốc",D:"Nhờ người ngồi lên"},
-correct:"B"
-},
-
-{
-q:"Khoảng cách an toàn với người đi bộ?",
-options:{A:"0.5m",B:"1m",C:"2m",D:"5m"},
-correct:"C"
-},
-
-{
-q:"Khi đỗ xe nâng phải?",
-options:{A:"Hạ càng",B:"Kéo phanh tay",C:"Tắt máy",D:"Tất cả"},
-correct:"D"
-},
-
-{
-q:"Mục đích kiểm tra xe nâng trước ca làm việc?",
-options:{A:"Để xe sạch",B:"Phát hiện hư hỏng",C:"Tăng tốc độ",D:"Tiết kiệm xăng"},
-correct:"B"
-},
-
-{
-q:"Khi di chuyển không tải, càng nâng nên cao bao nhiêu?",
-options:{A:"Sát đất",B:"15-20cm",C:"50cm",D:"1m"},
-correct:"B"
-},
-
-{
-q:"Khi hàng che khuất tầm nhìn phía trước?",
-options:{A:"Nhìn nghiêng",B:"Lùi xe",C:"Tăng tốc",D:"Bấm còi liên tục"},
-correct:"B"
-},
-
-{
-q:"Đèn báo ắc quy sáng nghĩa là?",
-options:{A:"Thiếu nước",B:"Lỗi sạc",C:"Thiếu dầu",D:"Hỏng phanh"},
-correct:"B"
-},
-
-{
-q:"Khi pallet bị nghiêng?",
-options:{A:"Dừng và chỉnh",B:"Đi tiếp",C:"Tăng tốc",D:"Phanh gấp"},
-correct:"A"
-},
-
-{
-q:"Trọng tâm xe nâng khi nâng hàng?",
-options:{A:"Ra trước và lên cao",B:"Ra sau",C:"Không đổi",D:"Xuống thấp"},
-correct:"A"
-},
-
-{
-q:"Khi xe nâng xuống dốc có tải?",
-options:{A:"Đi tiến",B:"Đi lùi",C:"Đi chéo",D:"Tắt máy"},
-correct:"B"
-},
-
-{
-q:"Khi đỗ xe nâng?",
-options:{A:"Hạ càng",B:"Kéo phanh",C:"Tắt máy",D:"Tất cả"},
-correct:"D"
-},
-
-{
-q:"Áp suất lốp thấp gây?",
-options:{A:"Đi nhanh",B:"Mất ổn định",C:"Tiết kiệm xăng",D:"Không ảnh hưởng"},
-correct:"B"
-},
-
-{
-q:"Có được nâng người bằng xe nâng?",
-options:{A:"Được",B:"Không",C:"Được nếu thấp",D:"Được nếu có người giữ"},
-correct:"B"
-},
-
-{
-q:"Khi qua góc khuất?",
-options:{A:"Tăng tốc",B:"Bấm còi",C:"Tắt đèn",D:"Dừng lâu"},
-correct:"B"
-},
-
-{
-q:"Xích nâng cần kiểm tra?",
-options:{A:"Độ giãn",B:"Màu",C:"Chiều dài",D:"Trọng lượng"},
-correct:"A"
-},
-
-{
-q:"Khi xe nâng lật?",
-options:{A:"Nhảy ra",B:"Giữ chặt vô lăng",C:"Đẩy xe",D:"Chạy"},
-correct:"B"
-},
-
-{
-q:"Hệ thống đổi hướng xe?",
-options:{A:"Phanh",B:"Lái",C:"Nâng",D:"Hộp số"},
-correct:"B"
-},
-
-{
-q:"Dầu thủy lực dùng để?",
-options:{A:"Bôi trơn",B:"Truyền lực nâng",C:"Làm mát",D:"Rửa xe"},
-correct:"B"
-},
-
-{
-q:"Phanh gấp khi có tải sẽ?",
-options:{A:"Tốt",B:"Rơi hàng",C:"Không sao",D:"Nhanh hơn"},
-correct:"B"
-},
-
-{
-q:"Càng nâng vào pallet?",
-options:{A:"Nửa pallet",B:"Hết pallet",C:"Lệch",D:"Tùy ý"},
-correct:"B"
-},
-
-{
-q:"Xe nâng ban đêm cần?",
-options:{A:"Đèn",B:"Còi",C:"Gương",D:"Nhạc"},
-correct:"A"
-},
-
-{
-q:"Khói diesel đen?",
-options:{A:"Thừa nhiên liệu",B:"Thiếu dầu",C:"Thiếu nước",D:"Tốt"},
-correct:"A"
-},
-
-{
-q:"Khoảng cách càng nâng?",
-options:{A:"Rộng",B:"Hẹp",C:"Cân đối",D:"Cố định"},
-correct:"C"
-},
-
-{
-q:"Xe nâng lên dốc có tải?",
-options:{A:"Tiến",B:"Lùi",C:"Chéo",D:"Dừng"},
-correct:"A"
-},
-
-{
-q:"Tải trọng tâm tính từ?",
-options:{A:"Đầu càng",B:"Mặt tựa",C:"Bánh",D:"Đất"},
-correct:"B"
-},
-
-{
-q:"Pallet hỏng?",
-options:{A:"Dùng",B:"Không dùng",C:"Buộc dây",D:"Nâng thấp"},
-correct:"B"
-},
-
-{
-q:"Ai ưu tiên trong kho?",
-options:{A:"Xe",B:"Người đi bộ",C:"Nhanh hơn",D:"Thỏa thuận"},
-correct:"B"
-},
-
-{
-q:"Van an toàn thủy lực?",
-options:{A:"Tăng tốc",B:"Chống quá tải",C:"Giảm ồn",D:"Tiết kiệm"},
-correct:"B"
-},
-
-{
-q:"Xe nâng điện dùng?",
-options:{A:"Xăng",B:"Diesel",C:"Ắc quy",D:"Gas"},
-correct:"C"
-},
-
-{
-q:"Xe nâng kho hẹp?",
-options:{A:"Reach Truck",B:"Xe cẩu",C:"Xe dầu",D:"Container"},
-correct:"A"
-},
-
-{
-q:"Trước khi khởi động cần kiểm tra?",
-options:{A:"Dầu máy",B:"Dầu hộp số",C:"Dầu thủy lực",D:"Tất cả"},
-correct:"D"
-},
-
-{
-q:"Nghe tiếng lạ thủy lực?",
-options:{A:"Tiếp tục",B:"Dừng kiểm tra",C:"Đổ nước",D:"Bịt tai"},
-correct:"B"
-},
-
-{
-q:"Nghiêng trụ sau giúp?",
-options:{A:"Giữ hàng",B:"Nhanh hơn",C:"Tiết kiệm",D:"Đẹp"},
-correct:"A"
-},
-
-{
-q:"Xe trong container chú ý?",
-options:{A:"Ánh sáng",B:"Màu",C:"Lốp",D:"Nhiệt"},
-correct:"A"
-},
-
-{
-q:"Phanh tay dùng khi?",
-options:{A:"Chạy nhanh",B:"Dừng xe",C:"Nâng hàng",D:"Lùi"},
-correct:"B"
-},
-
-{
-q:"Nước làm mát?",
-options:{A:"Rửa máy",B:"Ổn định nhiệt",C:"Tăng lực",D:"Kêu to"},
-correct:"B"
-},
-
-{
-q:"Thêm đối trọng?",
-options:{A:"Được",B:"Không",C:"Thợ làm",D:"Đứng sau"},
-correct:"B"
-},
-
-{
-q:"Sạc ắc quy cần?",
-options:{A:"Thông thoáng",B:"Phòng kín",C:"Vừa chạy",D:"Nhanh"},
-correct:"A"
-},
-
-{
-q:"Gương chiếu hậu?",
-options:{A:"Trang điểm",B:"Quan sát sau",C:"Trang trí",D:"Nhìn hàng"},
-correct:"B"
-},
-
-{
-q:"Còi xe nâng dùng?",
-options:{A:"Chào",B:"Cảnh báo",C:"Thúc",D:"Thử"},
-correct:"B"
-},
-
-{
-q:"Chỉnh ghế khi chạy?",
-options:{A:"Được",B:"Không",C:"Được khi vắng",D:"Một tay"},
-correct:"B"
-},
-
-{
-q:"Bộ phận chịu lực nâng?",
-options:{A:"Vô lăng",B:"Trụ và càng",C:"Ghế",D:"Đối trọng"},
-correct:"B"
-},
-
-{
-q:"Lốp đặc mẻ?",
-options:{A:"Dùng",B:"Thay",C:"Dán",D:"Sơn"},
-correct:"B"
-},
-
-{
-q:"Đánh lái gấp khi nâng cao?",
-options:{A:"Nhanh",B:"Lật xe",C:"Ổn định",D:"Tiết kiệm"},
-correct:"B"
-},
-
-{
-q:"LPG nghĩa?",
-options:{A:"Diesel",B:"Gas hóa lỏng",C:"Điện",D:"Dầu"},
-correct:"B"
-},
-
-{
-q:"Free lift?",
-options:{A:"Nâng tối đa",B:"Nâng không tăng chiều cao trụ",C:"Không tải",D:"Chiều cao ghế"},
-correct:"B"
-},
-
-{
-q:"Không có chứng chỉ lái?",
-options:{A:"Được",B:"Không",C:"Sân trống",D:"Chủ xe"},
-correct:"B"
-},
-
-{
-q:"Hạ hàng thấp khi chạy để?",
-options:{A:"Ổn định",B:"Nhanh",C:"Đẹp",D:"Tiết kiệm"},
-correct:"A"
-},
-
-{
-q:"Dùng điện thoại khi lái?",
-options:{A:"Được",B:"Cấm",C:"Tai nghe",D:"Chậm"},
-correct:"B"
-},
-
-{
-q:"Dây an toàn giúp?",
-options:{A:"Không văng",B:"Đau",C:"Đối phó",D:"Ngủ"},
-correct:"A"
-},
-
-{
-q:"Max capacity?",
-options:{A:"Tốc độ",B:"Tải tối đa",C:"Chiều cao",D:"Dung tích"},
-correct:"B"
-},
-
-{
-q:"Động cơ quá nóng không nên?",
-options:{A:"Mở két nước",B:"Để nguội",C:"Kiểm tra",D:"Dừng xe"},
-correct:"A"
-},
-
-{
-q:"Dầu thủy lực sạch?",
-options:{A:"Đen",B:"Trắng",C:"Vàng nhạt",D:"Xanh"},
-correct:"C"
-},
-
-{
-q:"Kho thực phẩm nên dùng?",
-options:{A:"Diesel",B:"Điện",C:"Xăng",D:"Củi"},
-correct:"B"
-},
-
-{
-q:"Biển tam giác vàng?",
-options:{A:"Cấm",B:"Nguy hiểm",C:"Chỉ dẫn",D:"Hiệu lệnh"},
-correct:"B"
-},
-
-{
-q:"Lùi xe nâng phải?",
-options:{A:"Nhìn gương",B:"Quay đầu",C:"Nhìn trước",D:"Nhắm mắt"},
-correct:"B"
-},
-
-{
-q:"Đối trọng nằm?",
-options:{A:"Trước",B:"Sau",C:"Gầm",D:"Nóc"},
-correct:"B"
-},
-
-{
-q:"Đi dưới càng nâng?",
-options:{A:"Được",B:"Không",C:"Nhanh",D:"Mũ"},
-correct:"B"
-},
-
-{
-q:"Xích lệch?",
-options:{A:"Nghiêng càng",B:"Nhanh",C:"Tiết kiệm",D:"Không sao"},
-correct:"A"
-},
-
-{
-q:"Trước khi rời xe?",
-options:{A:"Số tiến",B:"Số lùi",C:"Số N",D:"Tùy"},
-correct:"C"
-},
-
-{
-q:"Nút đỏ xe điện?",
-options:{A:"Tắt nhạc",B:"Ngắt điện",C:"Đèn",D:"Khởi động"},
-correct:"B"
-},
-
-{
-q:"Quá tải xe nâng?",
-options:{A:"Đuôi hổng",B:"Nhanh",C:"Càng ngắn",D:"Mát máy"},
-correct:"A"
-},
-
-{
-q:"Rơ vô lăng lớn?",
-options:{A:"Khó lái",B:"Tốn xăng",C:"Mòn phanh",D:"Rơi hàng"},
-correct:"A"
-},
-
-{
-q:"Đường dầu mỡ?",
-options:{A:"Phanh gấp",B:"Nhanh",C:"Chậm",D:"Hút thuốc"},
-correct:"C"
-},
-
-{
-q:"Đùa nghịch xe nâng?",
-options:{A:"Được",B:"Cấm",C:"Giảm stress",D:"Nhắc"},
-correct:"B"
-},
-
-{
-q:"Ắc quy thiếu nước?",
-options:{A:"Axit",B:"Nước cất",C:"Nước lọc",D:"Muối"},
-correct:"B"
-},
-
-{
-q:"Xe dầu trong kho kín?",
-options:{A:"Ồn",B:"Khí CO độc",C:"Hỏng kho",D:"Nóng"},
-correct:"B"
-},
-
-{
-q:"Trọng tâm xa càng?",
-options:{A:"Giảm sức nâng",B:"Tăng",C:"Không đổi",D:"Nhanh"},
-correct:"A"
-},
-
-{
-q:"Inch pedal?",
-options:{A:"Phanh",B:"Nhích xe chính xác",C:"Tăng ga",D:"Lùi"},
-correct:"B"
-},
-
-{
-q:"Người đứng trên pallet?",
-options:{A:"Chạy",B:"Yêu cầu xuống",C:"Tăng tốc",D:"Cảm ơn"},
-correct:"B"
-},
-
-{
-q:"Lấy hàng giá cao?",
-options:{A:"Nâng đúng cao",B:"Húc",C:"Còi",D:"Lùi"},
-correct:"A"
-},
-
-{
-q:"Góc nghiêng trụ?",
-options:{A:"90°",B:"5-12°",C:"45°",D:"180°"},
-correct:"B"
-},
-
-{
-q:"Quá tải thường xuyên?",
-options:{A:"Gãy càng",B:"Bền",C:"Nhanh",D:"Thưởng"},
-correct:"A"
-},
-
-{
-q:"Điểm mù cột nhà?",
-options:{A:"Nhanh",B:"Quan sát",C:"Nhắm mắt",D:"Đẩy"},
-correct:"B"
-},
-
-{
-q:"Hệ thống lái?",
-options:{A:"Bánh trước",B:"Bánh sau",C:"4 bánh",D:"Không"},
-correct:"B"
-},
-
-{
-q:"Lái bánh sau để?",
-options:{A:"Nhanh",B:"Linh hoạt",C:"Rõ",D:"Nhầm"},
-correct:"B"
-},
-
-{
-q:"Thay bình gas?",
-options:{A:"Khóa van",B:"Lửa",C:"Hút thuốc",D:"Không khóa"},
-correct:"A"
-},
-
-{
-q:"Đèn lọc gió đỏ?",
-options:{A:"Sạch",B:"Bẩn",C:"Hỏng máy",D:"Hết dầu"},
-correct:"B"
-},
-
-{
-q:"Chiều cao tổng xe?",
-options:{A:"Qua cửa",B:"Đứng",C:"Nâng",D:"Sạc"},
-correct:"A"
-},
-
-{
-q:"Khúc cua dễ lật do?",
-options:{A:"Trọng lực",B:"Ly tâm",C:"Ma sát",D:"Đẩy"},
-correct:"B"
-},
-
-{
-q:"Người lái giỏi?",
-options:{A:"Nhanh",B:"Nặng",C:"An toàn",D:"Sửa giỏi"},
-correct:"C"
-},
-
-{
-q:"Rò rỉ dầu?",
-options:{A:"Lau",B:"Báo sửa",C:"Cát",D:"Kệ"},
-correct:"B"
-},
-
-{
-q:"Khoảng cách xe nâng?",
-options:{A:"1m",B:"3 thân xe",C:"Gần",D:"100m"},
-correct:"B"
-},
-
-{
-q:"Biển STOP?",
-options:{A:"Dừng",B:"Chậm",C:"Còi",D:"Quay"},
-correct:"A"
-},
-
-{
-q:"Hàng vướng kệ?",
-options:{A:"Giật",B:"Hạ chỉnh",C:"Tăng ga",D:"Leo"},
-correct:"B"
-},
-
-{
-q:"Bảo vệ người lái?",
-options:{A:"Mái che",B:"Kính",C:"Mũ",D:"Càng"},
-correct:"A"
-},
-
-{
-q:"Chở thêm người?",
-options:{A:"Được",B:"Cấm",C:"Sếp",D:"Đối trọng"},
-correct:"B"
-},
-
-{
-q:"Đỗ xe trên dốc?",
-options:{A:"Tắt máy",B:"Chèn bánh",C:"Trôi",D:"Giữ"},
-correct:"B"
-},
-
-{
-q:"Còi lùi?",
-options:{A:"Ngủ",B:"Cảnh báo",C:"Hết xăng",D:"Hỏng"},
-correct:"B"
-},
-
-{
-q:"Hàng lỏng?",
-options:{A:"Nhanh",B:"Tránh phanh gấp",C:"Mở nắp",D:"Không"},
-correct:"B"
-},
-
-{
-q:"Đèn xanh xe điện?",
-options:{A:"Trang trí",B:"Cảnh báo",C:"Chiếu sáng",D:"Pin"},
-correct:"B"
-},
-
-{
-q:"Sling dây cẩu?",
-options:{A:"Có phụ kiện",B:"Cấm",C:"Dây thừng",D:"Dây thép"},
-correct:"A"
-},
-
-{
-q:"Trời mưa?",
-options:{A:"Trơn trượt",B:"Sạch",C:"Mát",D:"Không"},
-correct:"A"
-},
-
-{
-q:"Sau ca làm?",
-options:{A:"Để chìa",B:"Bàn giao",C:"Mang về",D:"Vứt"},
-correct:"B"
-},
-
-{
-q:"Lốp đặc dùng?",
-options:{A:"Bùn",B:"Sàn kho",C:"Cát",D:"Rừng"},
-correct:"B"
-},
-
-{
-q:"Ngã tư kho?",
-options:{A:"Nhanh",B:"Nhường",C:"Bình thường",D:"Tắt máy"},
-correct:"B"
-},
-
-{
-q:"Nâng khi trụ nghiêng trước?",
-options:{A:"Trượt hàng",B:"Chậm",C:"Hỏng xích",D:"Tốn dầu"},
-correct:"A"
-},
-
-{
-q:"Vệ sinh xe?",
-options:{A:"Khi bẩn",B:"Định kỳ",C:"Khi hỏng",D:"Không"},
-correct:"B"
-},
-
-{
-q:"Tự sửa điện?",
-options:{A:"Được",B:"Kỹ thuật",C:"Có kìm",D:"Hết BH"},
-correct:"B"
-},
-
-{
-q:"Xuống dốc không tải?",
-options:{A:"Tiến",B:"Lùi",C:"Chéo",D:"Tắt"},
-correct:"A"
-},
-
-{
-q:"Tốc độ kho?",
-options:{A:"5-10km/h",B:"30",C:"50",D:"Tùy"},
-correct:"A"
-},
-
-{
-q:"Thái độ lái xe nâng?",
-options:{A:"An toàn",B:"Nhanh",C:"Tiết kiệm",D:"Theo sếp"},
-correct:"A"
+// 1. Cấu hình - Thay link Web App của thầy vào đây
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw9jCY17LhjN9RR9QrP_l5ewygs1W91-aMT2SZvnbJXAdH01BzRfJaU-LqYVpD2DJo5/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxGySySYeE0wsg-41K5lTQUYgL_beTxmCGagDfwQO1AUxLs_l8K4iGMgz-jKE9sxc/exec";
+
+let allQuestions = [];
+let selectedQuestions = [];
+let timeLeft = 1200; // 20 phút (1200 giây)
+let timerInterval;
+
+// 2. Hàm bắt đầu thi
+async function startQuiz() {
+    const name = document.getElementById('studentName').value.trim();
+    const id = document.getElementById('studentID').value.trim();
+
+    if (!name || !id) {
+        alert("Thầy nhắc học viên nhập đủ Họ tên và Mã số nhé!");
+        return;
+    }
+
+    // Hiệu ứng chờ tải dữ liệu
+    document.getElementById('start-screen').innerHTML = `
+        <div class="card-body text-center">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Đang lấy đề thi từ hệ thống CAEE...</p>
+        </div>`;
+
+    try {
+        const response = await fetch(WEB_APP_URL);
+        allQuestions = await response.json();
+
+        // Lấy 30 câu ngẫu nhiên từ ngân hàng câu hỏi của thầy
+        selectedQuestions = allQuestions.sort(() => 0.5 - Math.random()).slice(0, 30);
+
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'block';
+
+        renderQuestions();
+        startTimer();
+    } catch (error) {
+        alert("Lỗi kết nối! Thầy kiểm tra lại link Web App hoặc quyền chia sẻ của Sheets nhé.");
+        location.reload();
+    }
 }
 
-];
+// 3. Hàm hiển thị câu hỏi (Tương thích với bảng DeThi của thầy)
+function renderQuestions() {
+    const container = document.getElementById('quiz-content');
+    let html = "";
+
+    selectedQuestions.forEach((q, i) => {
+        // Kiểm tra xem câu hỏi có ảnh không (cột HINHANH)
+        const imageHtml = q["HINHANH"] ? `<img src="${q["HINHANH"]}" class="img-fluid rounded border mb-3 shadow-sm" style="max-height:300px;">` : "";
+
+        html += `
+            <div class="question-box shadow-sm mb-4 p-3 bg-white rounded">
+                <h5 class="text-dark">Câu ${i + 1}: ${q["Nội dung câu hỏi"]}</h5>
+                ${imageHtml}
+                <div class="options-group mt-3">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="q${i}" id="q${i}a" value="A">
+                        <label class="form-check-label w-100" for="q${i}a">A. ${q["Đáp án A"]}</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="q${i}" id="q${i}b" value="B">
+                        <label class="form-check-label w-100" for="q${i}b">B. ${q["Đáp án B"]}</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="q${i}" id="q${i}c" value="C">
+                        <label class="form-check-label w-100" for="q${i}c">C. ${q["Đáp án C"]}</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="q${i}" id="q${i}d" value="D">
+                        <label class="form-check-label w-100" for="q${i}d">D. ${q["Đáp án D"]}</label>
+                    </div>
+                </div>
+            </div>`;
+    });
+    container.innerHTML = html;
+}
+
+// 4. Đồng hồ đếm ngược
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        let min = Math.floor(timeLeft / 60);
+        let sec = timeLeft % 60;
+        document.getElementById('timer').innerText = `Thời gian còn lại: ${min}:${sec < 10 ? '0' : ''}${sec}`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            alert("Hết giờ làm bài! Hệ thống sẽ tự động nộp.");
+            submitQuiz();
+        }
+    }, 1000);
+}
+
+// 5. Chấm điểm và gửi kết quả về Sheets
+async function submitQuiz() {
+    clearInterval(timerInterval);
+    let score = 0;
+
+    selectedQuestions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected && selected.value === q["Đáp án đúng"]) {
+            score++;
+        }
+    });
+
+    const status = score >= 24 ? "ĐẠT" : "KHÔNG ĐẠT"; // 24/30 câu là Đạt
+    const payload = {
+        name: document.getElementById('studentName').value,
+        id: document.getElementById('studentID').value,
+        score: score,
+        status: status
+    };
+
+    // Hiệu ứng đang nộp bài
+    document.getElementById('quiz-screen').innerHTML = `
+        <div class="text-center p-5">
+            <div class="spinner-grow text-success" role="status"></div>
+            <h3>Đang lưu kết quả của thầy...</h3>
+        </div>`;
+
+    try {
+        await fetch(WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify(payload)
+        });
+
+        alert(`Chúc mừng! Bạn đúng ${score}/30 câu. Kết quả: ${status}`);
+    } catch (e) {
+        alert("Lưu điểm gặp lỗi, nhưng thầy đừng lo, hãy chụp màn hình kết quả này!");
+    }
+
+    location.reload(); // Quay lại màn hình bắt đầu
+}
