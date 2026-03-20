@@ -1,134 +1,221 @@
-// 1. Cấu hình - Thay link Web App của thầy vào đây
+// --- 1. CẤU HÌNH WEB APP URL ---
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxGySySYeE0wsg-41K5lTQUYgL_beTxmCGagDfwQO1AUxLs_l8K4iGMgz-jKE9sxc/exec";
-let allQuestions = [];
-let selectedQuestions = [];
+
+// --- 2. BIẾN TRẠNG THÁI ---
+let selectedQuestions = []; // 30 câu ngẫu nhiên
+let studentAnswers = [];    /* Mảng lưu đáp án: [{qIndex:0, selectedAnswer:"A"}, ...] */
+let currentQuestionIndex = 0; // Câu hỏi đang hiển thị
 let timeLeft = 1200; // 20 phút (1200 giây)
 let timerInterval;
 
-// 2. Hàm bắt đầu thi
-async function startQuiz() {
+// --- 3. HÀM BẮT ĐẦU THI ---
+function startQuiz() {
     const name = document.getElementById('studentName').value.trim();
     const id = document.getElementById('studentID').value.trim();
 
     if (!name || !id) {
-        alert("Thầy nhắc học viên nhập đủ Họ tên và Mã số nhé!");
+        alert("Vui lòng nhập đủ Họ tên và Khóa!");
         return;
     }
 
-    // Hiệu ứng chờ tải dữ liệu
-    document.getElementById('start-screen').innerHTML = `
-        <div class="card-body text-center">
-            <div class="spinner-border text-primary" role="status"></div>
-            <p class="mt-2">Đang lấy đề thi từ hệ thống CAEE...</p>
-        </div>`;
+    // Kiểm tra dữ liệu
+    if (typeof questionBank === 'undefined' || questionBank.length < 30) {
+        alert("Lỗi: Không tìm thấy file data.js hoặc ngân hàng câu hỏi quá ít!");
+        return;
+    }
 
-    try {
-        const response = await fetch(WEB_APP_URL);
-        allQuestions = await response.json();
+    // Chọn 30 câu ngẫu nhiên từ data.js
+    selectedQuestions = [...questionBank].sort(() => 0.5 - Math.random()).slice(0, 30);
+    studentAnswers = []; // Xóa đáp án cũ
 
-        // Lấy 30 câu ngẫu nhiên từ ngân hàng câu hỏi của thầy
-        selectedQuestions = allQuestions.sort(() => 0.5 - Math.random()).slice(0, 30);
+    // Hiển thị giao diện làm bài
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('caee-header').style.display = 'flex';
+    document.getElementById('quiz-screen').style.display = 'grid';
 
-        document.getElementById('start-screen').style.display = 'none';
-        document.getElementById('quiz-screen').style.display = 'block';
+    // Cập nhật thông tin học viên trên Header
+    document.getElementById('header-student-info').innerText = `Học viên: ${name}`;
 
-        renderQuestions();
-        startTimer();
-    } catch (error) {
-        alert("Lỗi kết nối! Thầy kiểm tra lại link Web App hoặc quyền chia sẻ của Sheets nhé.");
-        location.reload();
+    // Tạo sơ đồ câu hỏi (bên phải)
+    generateNavigationGrid();
+    
+    // Hiển thị câu đầu tiên
+    showQuestion(0);
+    
+    // Chạy đồng hồ
+    startTimer();
+}
+
+// --- 4. HÀM HIỂN THỊ CÂU HỎI TỪNG CÂU ---
+function showQuestion(index) {
+    currentQuestionIndex = index;
+    const q = selectedQuestions[index];
+    const content = document.getElementById('quiz-content');
+    
+    // Tìm đáp án học viên đã chọn trước đó (nếu có)
+    const storedAnswer = studentAnswers.find(item => item.qIndex === index);
+
+    let optionsHtml = "";
+    // Ánh xạ options thành giao diện
+    const optionLabels = ['A', 'B', 'C', 'D'];
+    q.options.forEach((opt, idx) => {
+        const isSelected = storedAnswer && storedAnswer.selectedAnswer === opt;
+        optionsHtml += `
+            <div class="option-item ${isSelected ? 'selected' : ''}" onclick="selectAnswer(this, ${index}, '${opt}')">
+                <input type="radio" name="opt" ${isSelected ? 'checked' : ''} style="display:none;">
+                <label class="option-label">${opt}</label>
+            </div>`;
+    });
+
+    // Tạo nội dung HTML
+    content.innerHTML = `
+        <div class="question-header"> 
+            <span class="q-count">Câu ${index + 1}/30</span>
+        </div>
+        <div class="question-text">${q.question}</div>
+        
+        <div class="options-group">
+            ${optionsHtml}
+        </div>
+        
+        <div class="navigation-btns">
+            <button class="btn-nav btn-prev" onclick="prevQuestion()" ${index === 0 ? 'style="visibility:hidden;"' : ''}>‹ TRƯỚC</button>
+            <button class="btn-nav btn-next" onclick="nextQuestion()">TIẾP ›</button>
+        </div>
+    `;
+
+    // Cập nhật trạng thái lưới câu hỏi (Màu Cam khi đang chọn)
+    updateGridStatus(index);
+}
+
+// --- 5. HÀM XỬ LÝ CHỌN ĐÁP ÁN ---
+function selectAnswer(element, qIndex, answer) {
+    // Lưu đáp án vào mảng
+    const existingIndex = studentAnswers.findIndex(item => item.qIndex === qIndex);
+    if (existingIndex !== -1) {
+        studentAnswers[existingIndex].selectedAnswer = answer;
+    } else {
+        studentAnswers.push({ qIndex: qIndex, selectedAnswer: answer });
+    }
+
+    // Cập nhật giao diện (màu xanh cho đáp án được chọn)
+    const options = element.parentElement.querySelectorAll('.option-item');
+    options.forEach(opt => opt.classList.remove('selected'));
+    element.classList.add('selected');
+
+    // Cập nhật sơ đồ câu hỏi (Màu Xanh khi đã trả lời)
+    updateGridStatus(qIndex);
+}
+
+// --- 6. HÀM ĐIỀU HƯỚNG ---
+function nextQuestion() {
+    if (currentQuestionIndex < selectedQuestions.length - 1) {
+        showQuestion(currentQuestionIndex + 1);
+    } else {
+        alert("Bạn đã ở câu hỏi cuối cùng. Nhấn NỘP BÀI.");
     }
 }
 
-// 3. Hàm hiển thị câu hỏi (Tương thích với bảng DeThi của thầy)
-function renderQuestions() {
-    const container = document.getElementById('quiz-content');
-    let html = "";
-
-    selectedQuestions.forEach((q, i) => {
-        // Kiểm tra xem câu hỏi có ảnh không (cột HINHANH)
-        const imageHtml = q["HINHANH"] ? `<img src="${q["HINHANH"]}" class="img-fluid rounded border mb-3 shadow-sm" style="max-height:300px;">` : "";
-
-        html += `
-            <div class="question-box shadow-sm mb-4 p-3 bg-white rounded">
-                <h5 class="text-dark">Câu ${i + 1}: ${q["Nội dung câu hỏi"]}</h5>
-                ${imageHtml}
-                <div class="options-group mt-3">
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="q${i}" id="q${i}a" value="A">
-                        <label class="form-check-label w-100" for="q${i}a">A. ${q["Đáp án A"]}</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="q${i}" id="q${i}b" value="B">
-                        <label class="form-check-label w-100" for="q${i}b">B. ${q["Đáp án B"]}</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="q${i}" id="q${i}c" value="C">
-                        <label class="form-check-label w-100" for="q${i}c">C. ${q["Đáp án C"]}</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="q${i}" id="q${i}d" value="D">
-                        <label class="form-check-label w-100" for="q${i}d">D. ${q["Đáp án D"]}</label>
-                    </div>
-                </div>
-            </div>`;
-    });
-    container.innerHTML = html;
+function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+        showQuestion(currentQuestionIndex - 1);
+    }
 }
 
-// 4. Đồng hồ đếm ngược
+// --- 7. TẠO SƠ ĐỒ CÂU HỎI (GRID) ---
+function generateNavigationGrid() {
+    const grid = document.getElementById('nav-grid');
+    grid.innerHTML = "";
+    selectedQuestions.forEach((q, i) => {
+        const item = document.createElement('div');
+        item.classList.add('grid-item');
+        item.id = `grid-item-${i}`;
+        item.innerText = i + 1;
+        item.onclick = () => showQuestion(i);
+        grid.appendChild(item);
+    });
+}
+
+// --- 8. CẬP NHẬT TRẠNG THÁI MÀU GRID ---
+function updateGridStatus(currentIndex) {
+    for (let i = 0; i < 30; i++) {
+        const item = document.getElementById(`grid-item-${i}`);
+        if (!item) continue;
+
+        // Reset trạng thái
+        item.classList.remove('active', 'answered');
+
+        // Màu xanh cho câu đã trả lời
+        const isAnswered = studentAnswers.some(ans => ans.qIndex === i);
+        if (isAnswered) {
+            item.classList.add('answered');
+        }
+
+        // Màu cam cho câu đang chọn
+        if (i === currentIndex) {
+            item.classList.add('active');
+        }
+    }
+}
+
+// --- 9. ĐỒNG HỒ ĐẾM NGƯỢC ---
 function startTimer() {
     timerInterval = setInterval(() => {
         timeLeft--;
         let min = Math.floor(timeLeft / 60);
         let sec = timeLeft % 60;
-        document.getElementById('timer').innerText = `Thời gian còn lại: ${min}:${sec < 10 ? '0' : ''}${sec}`;
-
+        document.getElementById('timer').innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            alert("Hết giờ làm bài! Hệ thống sẽ tự động nộp.");
+            alert("Hết giờ làm bài!");
             submitQuiz();
         }
     }, 1000);
 }
 
-// 5. Chấm điểm và gửi kết quả về Sheets
+// --- 10. NỘP BÀI ---
 async function submitQuiz() {
     clearInterval(timerInterval);
     let score = 0;
 
-    selectedQuestions.forEach((q, i) => {
-        const selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if (selected && selected.value === q["Đáp án đúng"]) {
+    // Chấm điểm
+    studentAnswers.forEach(ans => {
+        const originalQuestion = selectedQuestions[ans.qIndex];
+        if (ans.selectedAnswer === originalQuestion.answer) {
             score++;
         }
     });
 
-    const status = score >= 24 ? "ĐẠT" : "KHÔNG ĐẠT"; // 24/30 câu là Đạt
-    const payload = {
-        name: document.getElementById('studentName').value,
-        id: document.getElementById('studentID').value,
-        score: score,
-        status: status
-    };
+    const status = score >= 25 ? "ĐẠT" : "KHÔNG ĐẠT";
+    
+    alert(`Chúc mừng! Kết quả của bạn: ${score}/30 câu - Bài thi: ${status}`);
 
-    // Hiệu ứng đang nộp bài
-    document.getElementById('quiz-screen').innerHTML = `
-        <div class="text-center p-5">
-            <div class="spinner-grow text-success" role="status"></div>
-            <h3>Đang lưu kết quả của thầy...</h3>
-        </div>`;
+// --- GỬI DỮ LIỆU VỀ GOOGLE SHEETS ---
+   // Sử dụng link thầy vừa tạo (kết thúc bằng R6Bev)
+   const scriptURL = 'https://script.google.com/macros/s/AKfycbzFDyujjPPP5EezT_-4F4vs9-9B77c_dNmwdWP5TyolKzj39Im9aT0ybRauIt_R6Bev/exec';
+   
+   const payload = {
+       name: document.getElementById('studentName').value,
+       id: document.getElementById('studentID').value,
+       score: score, // Gửi số điểm gốc để bên Sheet dễ xử lý
+       status: status
+   };
 
-    try {
-        await fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify(payload)
-        });
-
-        alert(`Chúc mừng! Bạn đúng ${score}/30 câu. Kết quả: ${status}`);
-    } catch (e) {
-        alert("Lưu điểm gặp lỗi, nhưng thầy đừng lo, hãy chụp màn hình kết quả này!");
-    }
-
-    location.reload(); // Quay lại màn hình bắt đầu
-}
+   // Dùng định dạng này để Google Script nhận được JSON
+   fetch(scriptURL, {
+       method: 'POST',
+       mode: 'no-cors', // Quan trọng: Phải có no-cors
+       cache: 'no-cache',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify(payload)
+   })
+   .then(() => {
+       alert("Đã gửi kết quả về hệ thống thành công!");
+       location.reload(); // Reset lại trang sau khi nộp
+   })
+   .catch(error => {
+       console.error('Lỗi gửi Sheets:', error);
+       alert("Có lỗi khi gửi kết quả, vui lòng báo giáo viên!");
+   });
+} 
