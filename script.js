@@ -189,33 +189,26 @@ async function submitQuiz() {
 
     const status = score >= 25 ? "ĐẠT" : "KHÔNG ĐẠT";
     
-    alert(`Chúc mừng! Kết quả của bạn: ${score}/30 câu - Bài thi: ${status}`);
+    alert(`Chúc mừng! Kết quả của bạn: ${score}/30 câu - Trạng thái: ${status}`);
 
-// --- GỬI DỮ LIỆU VỀ GOOGLE SHEETS ---
-   // Sử dụng link thầy vừa tạo (kết thúc bằng R6Bev)
-   const scriptURL = 'https://script.google.com/macros/s/AKfycbzHlAZKnl8uOQdfNmw9VROCyXccbeVU0mlV0OnxLL7-vatYV9_VCtyIsHGRIUfMwTxwvw/exec';
-   
-   const payload = {
-       name: document.getElementById('studentName').value,
-       id: document.getElementById('studentID').value,
-       score: score, // Gửi số điểm gốc để bên Sheet dễ xử lý
-       status: status
-   };
+   // --- GỬI DỮ LIỆU VỀ GOOGLE SHEETS ---
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxS9gNA422-E72u7M5Eo8uJrdBj5hdfjPssUyq6atDpO4SflS1QakhYK_IsvgpKIgKyTA/exec';
+    
+    const payload = {
+        name: document.getElementById('studentName').value, // Gửi cho cột HOTEN
+        id: document.getElementById('studentID').value,     // Gửi cho cột KHOA
+        score: score + "/30",                               // Gửi cho cột DIEM
+        status: status                                      // Gửi cho cột KETQUA
+    };
 
-   // Dùng định dạng này để Google Script nhận được JSON
-   fetch(scriptURL, {
-       method: 'POST',
-       mode: 'no-cors', // Quan trọng: Phải có no-cors
-       cache: 'no-cache',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify(payload)
-   })
-   .then(() => {
-       alert("Đã gửi kết quả về hệ thống thành công!");
-       location.reload(); // Reset lại trang sau khi nộp
-   })
-   .catch(error => {
-       console.error('Lỗi gửi Sheets:', error);
-       alert("Có lỗi khi gửi kết quả, vui lòng báo giáo viên!");
-   });
-} 
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    .then(() => {
+        console.log("Đã gửi dữ liệu thành công");
+    })
+    .catch(error => console.error('Lỗi gửi Sheets:', error));
+}
