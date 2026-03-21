@@ -200,7 +200,7 @@ async function submitQuiz() {
         score: score + "/30",                               // Gửi cho cột DIEM
         status: status                                      // Gửi cho cột KETQUA
     };
-
+ 
     fetch(scriptURL, {
         method: 'POST',
         mode: 'no-cors',
